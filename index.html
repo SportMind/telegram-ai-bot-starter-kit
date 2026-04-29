@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="system">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Telegram AI Bot Starter Kit — SportMind Ecosystem</title>
+<meta name="description" content="Deploy SportMind-powered AI agent bots on Telegram in minutes. Pre-built prompts, configs, and examples. MIT licensed.">
+<meta property="og:title" content="Telegram AI Bot Starter Kit — SportMind">
+<meta property="og:description" content="Deploy SportMind-powered AI agent bots on Telegram in minutes.">
+<meta property="og:url" content="https://sportmind.dev/telegram">
+<link rel="canonical" href="https://sportmind.dev/telegram">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+
+/* ── TOKENS ─────────────────────────────────────────────────────── */
+:root {
+  --sans: 'Geist', system-ui, sans-serif;
+  --mono: 'Geist Mono', monospace;
+  --bg:       #ffffff;
+  --bg-2:     #f9f9f8;
+  --bg-3:     #f2f2f0;
+  --border:   #e8e8e4;
+  --text:     #111110;
+  --text-2:   #6f6e69;
+  --text-3:   #b0afa8;
+  --accent:   #16663a;
+  --accent-h: #0f4f2c;
+  --green-bg: rgba(22,102,58,0.07);
+  --btn-text: #ffffff;
+  --tg:       #229ED9;
+  --tg-bg:    rgba(34,158,217,0.07);
+}
+
+[data-r="dark"] {
+  --bg:       #111110;
+  --bg-2:     #191918;
+  --bg-3:     #222220;
+  --border:   #2e2e2b;
+  --text:     #eeede8;
+  --text-2:   #908e85;
+  --text-3:   #5a5950;
+  --accent:   #4ade80;
+  --accent-h: #6aee98;
+  --green-bg: rgba(74,222,128,0.08);
+  --btn-text: #0a2e1a;
+  --tg:       #4db8e8;
+  --tg-bg:    rgba(77,184,232,0.08);
+}
+
+/* ── RESET ──────────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--sans);
+  font-size: 16px;
+  line-height: 1.6;
+  background: var(--bg);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+  transition: background .2s, color .2s;
+}
+a { color: inherit; text-decoration: none; }
+
+/* ── LAYOUT ─────────────────────────────────────────────────────── */
+.w  { max-width: 640px;  margin: 0 auto; padding: 0 24px; }
+.ww { max-width: 1000px; margin: 0 auto; padding: 0 24px; }
+
+/* ── NAV ────────────────────────────────────────────────────────── */
+nav {
+  position: sticky; top: 0; z-index: 50;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg);
+}
+.nav-i {
+  max-width: 1000px; margin: 0 auto; padding: 0 24px;
+  height: 52px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.nav-r { display: flex; align-items: center; gap: 4px; }
+.logo {
+  font-family: var(--mono);
+  font-size: 14px; font-weight: 500;
+  color: var(--text); letter-spacing: -0.02em;
+  display: flex; align-items: center; gap: 8px;
+}
+.logo-dot {
+  width: 6px; height: 6px;
+  background: var(--accent);
+  border-radius: 50%;
+  animation: blink 2.5s ease-in-out infinite;
+}
+@keyframes blink { 0%,100%{opacity:1}50%{opacity:.3} }
+.logo-sep {
+  font-family: var(--mono); font-size: 14px;
+  color: var(--text-3); margin: 0 2px;
+}
+.logo-sub {
+  font-family: var(--mono); font-size: 12px;
+  color: var(--tg); font-weight: 400;
+}
+.nav-a {
+  font-size: 13px; color: var(--text-2);
+  height: 32px; padding: 0 12px;
+  display: inline-flex; align-items: center;
+  border-radius: 5px;
+  transition: color .15s, background .15s;
+}
+.nav-a:hover { color: var(--text); background: var(--bg-2); }
+.nav-gh {
+  font-family: var(--mono);
+  font-size: 12px; color: var(--accent);
+  border: 1px solid var(--border);
+  height: 32px; padding: 0 14px;
+  display: inline-flex; align-items: center;
+  border-radius: 5px;
+  transition: border-color .15s, background .15s;
+}
+.nav-gh:hover { border-color: var(--accent); background: var(--green-bg); }
+.th {
+  background: none; border: 1px solid var(--border);
+  color: var(--text-3);
+  width: 34px; height: 32px;
+  display: inline-flex; align-items: center; justify-content: center;
+  border-radius: 5px; cursor: pointer; font-size: 13px;
+  transition: color .15s, border-color .15s;
+  outline: none;
+}
+.th:hover { color: var(--text-2); border-color: var(--text-3); }
+
+/* ── HERO ───────────────────────────────────────────────────────── */
+.hero { padding: 120px 0 96px; text-align: center; }
+.badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-family: var(--mono); font-size: 11px;
+  color: var(--text-3); letter-spacing: .1em;
+  text-transform: uppercase;
+  margin-bottom: 40px;
+}
+.badge-dot { width: 4px; height: 4px; background: var(--tg); border-radius: 50%; }
+.badge-tg { color: var(--tg); }
+h1 {
+  font-size: clamp(36px, 6vw, 64px);
+  font-weight: 300;
+  line-height: 1.1;
+  letter-spacing: -0.04em;
+  color: var(--text);
+  margin-bottom: 28px;
+}
+h1 strong { font-weight: 500; }
+.sub {
+  font-size: 17px; font-weight: 300;
+  color: var(--text-2); line-height: 1.75;
+  max-width: 480px; margin: 0 auto 48px;
+}
+.btns { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; }
+.btn-p {
+  font-family: var(--mono); font-size: 13px; font-weight: 500;
+  background: var(--accent); color: var(--btn-text);
+  padding: 11px 24px; border-radius: 6px;
+  border: 1px solid var(--accent);
+  transition: opacity .15s;
+}
+.btn-p:hover { opacity: .85; }
+.btn-tg {
+  font-family: var(--mono); font-size: 13px; font-weight: 500;
+  background: var(--tg); color: #ffffff;
+  padding: 11px 24px; border-radius: 6px;
+  border: 1px solid var(--tg);
+  transition: opacity .15s;
+}
+.btn-tg:hover { opacity: .85; }
+.btn-s {
+  font-family: var(--mono); font-size: 13px;
+  color: var(--text-2); border: 1px solid var(--border);
+  padding: 11px 24px; border-radius: 6px;
+  transition: color .15s, border-color .15s;
+}
+.btn-s:hover { color: var(--text); border-color: var(--text-3); }
+
+/* ── STATS ──────────────────────────────────────────────────────── */
+.stats {
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  padding: 48px 0;
+}
+.stats-g {
+  display: grid; grid-template-columns: repeat(4,1fr);
+}
+.stat {
+  text-align: center; padding: 0 20px;
+  border-right: 1px solid var(--border);
+}
+.stat:last-child { border-right: none; }
+.stat-n {
+  font-family: var(--mono); font-size: 32px; font-weight: 500;
+  letter-spacing: -0.04em; color: var(--text);
+  line-height: 1; margin-bottom: 6px;
+}
+.stat-n.tg { color: var(--tg); }
+.stat-l { font-size: 13px; color: var(--text-3); letter-spacing: .02em; }
+
+/* ── SECTION COMMON ─────────────────────────────────────────────── */
+.sec { padding: 96px 0; border-bottom: 1px solid var(--border); }
+.sec-tag {
+  font-family: var(--mono); font-size: 11px;
+  text-transform: uppercase; letter-spacing: .14em;
+  color: var(--text-3); margin-bottom: 24px;
+}
+h2 {
+  font-size: clamp(24px, 3vw, 32px); font-weight: 400;
+  letter-spacing: -0.03em; line-height: 1.2;
+  margin-bottom: 16px;
+}
+.prose {
+  font-size: 17px; font-weight: 300;
+  color: var(--text-2); line-height: 1.8;
+}
+
+/* ── HOW IT WORKS ───────────────────────────────────────────────── */
+.flow {
+  margin-top: 48px;
+  display: flex; flex-direction: column;
+  border: 1px solid var(--border); border-radius: 8px; overflow: hidden;
+}
+.flow-step {
+  display: grid; grid-template-columns: 40px 48px 1fr;
+  gap: 20px; align-items: center;
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--border);
+}
+.flow-step:last-child { border-bottom: none; }
+.flow-n {
+  font-family: var(--mono); font-size: 11px;
+  color: var(--text-3); letter-spacing: .08em;
+}
+.flow-icon {
+  width: 36px; height: 36px;
+  border: 1px solid var(--border); border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; background: var(--bg-2);
+  flex-shrink: 0;
+}
+.flow-text { font-size: 15px; color: var(--text-2); line-height: 1.7; }
+.flow-text strong { font-weight: 500; color: var(--text); }
+.flow-tg .flow-icon { border-color: var(--tg); background: var(--tg-bg); }
+
+/* ── USE CASES ──────────────────────────────────────────────────── */
+.cases-g {
+  margin-top: 48px;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+}
+.case {
+  border: 1px solid var(--border); border-radius: 8px;
+  padding: 24px; transition: border-color .15s;
+}
+.case:hover { border-color: var(--text-3); }
+.case-tag {
+  font-family: var(--mono); font-size: 10px;
+  text-transform: uppercase; letter-spacing: .12em;
+  color: var(--tg); margin-bottom: 12px;
+}
+.case-title { font-size: 15px; font-weight: 500; margin-bottom: 8px; }
+.case-desc { font-size: 14px; color: var(--text-2); line-height: 1.65; font-weight: 300; }
+.case-links {
+  margin-top: 16px;
+  display: flex; gap: 12px; flex-wrap: wrap;
+}
+.case-link {
+  font-family: var(--mono); font-size: 11px;
+  color: var(--text-3); border: 1px solid var(--border);
+  padding: 3px 10px; border-radius: 4px;
+  transition: color .15s, border-color .15s;
+}
+.case-link:hover { color: var(--accent); border-color: var(--accent); }
+
+/* ── PROMPTS ────────────────────────────────────────────────────── */
+.prompts {
+  margin-top: 48px;
+  display: flex; flex-direction: column;
+}
+.prompt-row {
+  display: grid; grid-template-columns: 200px 1fr auto;
+  gap: 20px; align-items: baseline;
+  padding: 18px 0; border-bottom: 1px solid var(--border);
+}
+.prompt-row:first-child { border-top: 1px solid var(--border); }
+.prompt-row:last-child { border-bottom: none; }
+.prompt-name { font-size: 14px; font-weight: 500; color: var(--text); }
+.prompt-desc { font-size: 15px; color: var(--text-2); line-height: 1.65; }
+.prompt-ctx {
+  font-family: var(--mono); font-size: 11px;
+  color: var(--tg); white-space: nowrap;
+  background: var(--tg-bg); padding: 3px 10px; border-radius: 4px;
+}
+
+/* ── CODE BOX ───────────────────────────────────────────────────── */
+.code-box {
+  margin-top: 48px; border: 1px solid var(--border);
+  border-radius: 8px; overflow: hidden;
+}
+.code-bar {
+  background: var(--bg-2); border-bottom: 1px solid var(--border);
+  padding: 12px 20px;
+  display: flex; justify-content: space-between; align-items: center;
+}
+.code-bar-l { font-family: var(--mono); font-size: 11px; color: var(--text-3); }
+.code-bar-r {
+  font-family: var(--mono); font-size: 11px;
+  color: var(--tg); background: var(--tg-bg);
+  padding: 3px 10px; border-radius: 4px;
+}
+.code-body {
+  background: var(--bg-2); padding: 28px 24px;
+  font-family: var(--mono); font-size: 13px;
+  line-height: 1.9; color: var(--text-2); overflow-x: auto;
+}
+.code-body .k { color: var(--accent); }
+.code-body .t { color: var(--tg); }
+.code-body .n { color: #c07830; }
+[data-r="dark"] .code-body .n { color: #e09040; }
+.code-body .c { color: var(--text-3); font-style: italic; }
+.code-foot {
+  padding: 12px 20px; border-top: 1px solid var(--border);
+  display: flex; justify-content: space-between;
+  font-family: var(--mono); font-size: 11px; color: var(--text-3);
+}
+
+/* ── ECOSYSTEM ───────────────────────────────────────────────────── */
+.eco-g {
+  margin-top: 48px;
+  display: grid; grid-template-columns: repeat(3,1fr); gap: 16px;
+}
+.eco-card {
+  border: 1px solid var(--border); border-radius: 8px;
+  padding: 24px; transition: border-color .15s;
+}
+.eco-card:hover { border-color: var(--text-3); }
+.eco-card.active { border-color: var(--tg); background: var(--tg-bg); }
+.eco-tag {
+  font-family: var(--mono); font-size: 10px;
+  text-transform: uppercase; letter-spacing: .12em;
+  color: var(--text-3); margin-bottom: 10px;
+}
+.eco-card.active .eco-tag { color: var(--tg); }
+.eco-name { font-size: 14px; font-weight: 500; margin-bottom: 6px; }
+.eco-desc { font-size: 13px; color: var(--text-2); line-height: 1.6; font-weight: 300; }
+.eco-link {
+  display: inline-block;
+  margin-top: 14px;
+  font-family: var(--mono); font-size: 11px;
+  color: var(--text-3); transition: color .15s;
+}
+.eco-link:hover { color: var(--accent); }
+.eco-card.active .eco-link { color: var(--tg); }
+
+/* ── QUICK START ────────────────────────────────────────────────── */
+.qs-g {
+  margin-top: 48px;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 48px;
+}
+.qs-path-tag {
+  font-family: var(--mono); font-size: 10px;
+  text-transform: uppercase; letter-spacing: .12em;
+  color: var(--text-3); margin-bottom: 16px;
+}
+.qs-title { font-size: 16px; font-weight: 500; margin-bottom: 20px; }
+.qs-steps { display: flex; flex-direction: column; gap: 0; }
+.qs-step {
+  display: flex; gap: 16px;
+  padding: 14px 0; border-bottom: 1px solid var(--border);
+}
+.qs-step:first-child { border-top: 1px solid var(--border); }
+.qs-step:last-child { border-bottom: none; }
+.qs-num {
+  font-family: var(--mono); font-size: 11px;
+  color: var(--text-3); flex-shrink: 0; padding-top: 2px; width: 20px;
+}
+.qs-text { font-size: 14px; color: var(--text-2); line-height: 1.65; }
+.qs-text strong { font-weight: 500; color: var(--text); }
+.qs-text code {
+  font-family: var(--mono); font-size: 12px;
+  background: var(--bg-3); padding: 1px 6px; border-radius: 3px;
+  color: var(--accent);
+}
+
+/* ── GOVERNANCE ─────────────────────────────────────────────────── */
+.gov-g {
+  margin-top: 48px;
+  display: grid; grid-template-columns: repeat(3,1fr); gap: 16px;
+}
+.gov-card {
+  border: 1px solid var(--border); border-radius: 8px; padding: 24px;
+}
+.gov-role { font-size: 14px; font-weight: 500; margin-bottom: 8px; }
+.gov-desc { font-size: 14px; color: var(--text-2); line-height: 1.65; font-weight: 300; }
+.gov-earn {
+  margin-top: 12px;
+  font-family: var(--mono); font-size: 11px;
+  color: var(--text-3);
+}
+.gov-earn span { color: var(--accent); }
+
+/* ── CTA ────────────────────────────────────────────────────────── */
+.cta { padding: 112px 0; text-align: center; }
+.cta h2 { margin-bottom: 16px; }
+.cta .prose { margin-bottom: 40px; }
+.cta-btns { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; }
+
+/* ── FOOTER ─────────────────────────────────────────────────────── */
+footer { border-top: 1px solid var(--border); padding: 32px 0; }
+.foot-i {
+  max-width: 1000px; margin: 0 auto; padding: 0 24px;
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: 16px;
+}
+.foot-logo { font-family: var(--mono); font-size: 13px; color: var(--text-3); }
+.foot-links { display: flex; gap: 24px; }
+.foot-a { font-size: 13px; color: var(--text-3); transition: color .15s; }
+.foot-a:hover { color: var(--text-2); }
+.foot-copy { font-family: var(--mono); font-size: 11px; color: var(--text-3); }
+
+/* ── RESPONSIVE ─────────────────────────────────────────────────── */
+@media (max-width: 720px) {
+  .stats-g { grid-template-columns: 1fr 1fr; }
+  .stat { border-right: none; border-bottom: 1px solid var(--border); padding: 20px; }
+  .stat:nth-child(odd) { border-right: 1px solid var(--border); }
+  .stat:last-child, .stat:nth-last-child(2):nth-child(odd) { border-bottom: none; }
+  .cases-g { grid-template-columns: 1fr; }
+  .eco-g { grid-template-columns: 1fr; }
+  .gov-g { grid-template-columns: 1fr; }
+  .qs-g { grid-template-columns: 1fr; gap: 40px; }
+  .prompt-row { grid-template-columns: 1fr; gap: 6px; }
+  .prompt-ctx { align-self: flex-start; }
+  .flow-step { grid-template-columns: 40px 1fr; }
+  .flow-icon { display: none; }
+  .nav-r .nav-a { display: none; }
+  .foot-links { display: none; }
+  .hero { padding: 80px 0 72px; }
+}
+
+/* ── REVEAL ─────────────────────────────────────────────────────── */
+.r { opacity: 0; transform: translateY(12px); transition: opacity .5s ease, transform .5s ease; }
+.r.in { opacity: 1; transform: none; }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-i">
+    <a href="https://sportmind.dev" class="logo">
+      <div class="logo-dot"></div>
+      sportmind
+      <span class="logo-sep">/</span>
+      <span class="logo-sub">telegram-ai-bot-starter-kit</span>
+    </a>
+    <div class="nav-r">
+      <a href="#how-it-works" class="nav-a">How it works</a>
+      <a href="#use-cases" class="nav-a">Use cases</a>
+      <a href="#quick-start" class="nav-a">Quick start</a>
+      <a href="https://github.com/SportMind/telegram-ai-bot-starter-kit" class="nav-gh" target="_blank" rel="noopener">GitHub ↗</a>
+      <button class="th" id="th" aria-label="Toggle theme">◐</button>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="w">
+  <section class="hero r">
+    <div class="badge">
+      <div class="badge-dot"></div>
+      <span class="badge-tg">Telegram Managed Bots</span>
+      &nbsp;·&nbsp; MIT License &nbsp;·&nbsp; v1.2.0
+    </div>
+    <h1>AI agent bots<br><strong>for Telegram</strong></h1>
+    <p class="sub">
+      Deploy SportMind-powered AI agents on Telegram in minutes.
+      Pre-built prompts, configs, and examples — backed by
+      SportMind's calibrated sports intelligence layer.
+    </p>
+    <div class="btns">
+      <a href="https://t.me/LobsterClawBot" class="btn-tg" target="_blank" rel="noopener">Try on Telegram ↗</a>
+      <a href="https://github.com/SportMind/telegram-ai-bot-starter-kit" class="btn-p" target="_blank" rel="noopener">View on GitHub</a>
+      <a href="#quick-start" class="btn-s">Quick start</a>
+    </div>
+  </section>
+</div>
+
+<!-- STATS -->
+<div class="stats r">
+  <div class="ww">
+    <div class="stats-g">
+      <div class="stat">
+        <div class="stat-n">4</div>
+        <div class="stat-l">Prompt files</div>
+      </div>
+      <div class="stat">
+        <div class="stat-n">6</div>
+        <div class="stat-l">Ready-made configs</div>
+      </div>
+      <div class="stat">
+        <div class="stat-n">5</div>
+        <div class="stat-l">Use cases</div>
+      </div>
+      <div class="stat">
+        <div class="stat-n tg">0</div>
+        <div class="stat-l">Paid dependencies</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- HOW IT WORKS -->
+<div class="w">
+  <section class="sec r" id="how-it-works">
+    <p class="sec-tag">How it works</p>
+    <h2>Telegram Managed Bots — the real flow.</h2>
+    <p class="prose">
+      Telegram's Managed Bots feature lets a manager bot create personal AI agents
+      on behalf of users — natively, with a single tap. Each agent gets its own
+      username and chat. Its intelligence is defined by your SportMind prompt.
+    </p>
+    <div class="flow">
+      <div class="flow-step flow-tg">
+        <div class="flow-n">01</div>
+        <div class="flow-icon">🦞</div>
+        <div class="flow-text">User opens <strong>@LobsterClawBot</strong> — a Telegram Managed Bots manager. Taps <strong>"Create a New Bot"</strong>.</div>
+      </div>
+      <div class="flow-step flow-tg">
+        <div class="flow-n">02</div>
+        <div class="flow-icon">💬</div>
+        <div class="flow-text">Telegram shows a native confirmation: <strong>"LobsterClawBot would like to create and manage a chatbot on your behalf."</strong> Bot name and username are auto-suggested.</div>
+      </div>
+      <div class="flow-step flow-tg">
+        <div class="flow-n">03</div>
+        <div class="flow-icon">✓</div>
+        <div class="flow-text">User taps <strong>Create</strong>. Child bot is live: <strong>"AI Agent #007 is ready. Its behaviour is defined by LobsterClawBot."</strong></div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-n">04</div>
+        <div class="flow-icon">🧠</div>
+        <div class="flow-text">User messages the bot. Manager bot routes to your LLM, loaded with a <strong>SportMind system prompt</strong> from this kit's <code style="font-family:var(--mono);font-size:12px;background:var(--bg-3);padding:1px 6px;border-radius:3px;color:var(--accent)">prompts/</code> directory.</div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-n">05</div>
+        <div class="flow-icon">📡</div>
+        <div class="flow-text">Agent responds with structured <strong>SportMind intelligence</strong> — pre-match signals, fan token analysis, sentiment, macro events.</div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- USE CASES -->
+<div class="w">
+  <section class="sec r" id="use-cases">
+    <p class="sec-tag">Use cases</p>
+    <h2>Five independently forkable bots.</h2>
+    <p class="prose">
+      Each use case ships with a complete config and a worked example.
+      Clone only what you need.
+    </p>
+    <div class="cases-g">
+      <div class="case">
+        <div class="case-tag">Fan Token</div>
+        <div class="case-title">Fan Token Trading Bot</div>
+        <div class="case-desc">Fan token signals, FTP PATH_2 supply event intelligence, CHI/TVS sentiment. Canonical example: $AFC Arsenal.</div>
+        <div class="case-links">
+          <span class="case-link">config/fan-token-trading-bot.yaml</span>
+          <span class="case-link">examples/fan-token-trading-bot.md</span>
+        </div>
+      </div>
+      <div class="case">
+        <div class="case-tag">Match Intelligence</div>
+        <div class="case-title">Match Intelligence Bot</div>
+        <div class="case-desc">Pre-match briefings for supporter groups. SMS, AFS, rivalry multipliers, and match conditions for any club.</div>
+        <div class="case-links">
+          <span class="case-link">config/match-intelligence-bot.yaml</span>
+          <span class="case-link">examples/match-intelligence-bot.md</span>
+        </div>
+      </div>
+      <div class="case">
+        <div class="case-tag">Calibration</div>
+        <div class="case-title">Calibration Bot</div>
+        <div class="case-desc">Collect prediction records from your community. Feeds directly into SportMind's calibration base. First 10 contributors earn Founding Calibrator status.</div>
+        <div class="case-links">
+          <span class="case-link">config/calibration-bot.yaml</span>
+          <span class="case-link">examples/calibration-bot.md</span>
+        </div>
+      </div>
+      <div class="case">
+        <div class="case-tag">Sentiment</div>
+        <div class="case-title">Sentiment Monitor</div>
+        <div class="case-desc">Passive or on-demand CHI and TVS sentiment snapshots for any fan token community. Divergence signals included.</div>
+        <div class="case-links">
+          <span class="case-link">config/sentiment-monitor.yaml</span>
+        </div>
+      </div>
+      <div class="case">
+        <div class="case-tag">Macro</div>
+        <div class="case-title">Macro Event Interpreter</div>
+        <div class="case-desc">MiCA, SEC/CFTC, Chiliz ecosystem events, and crypto cycle context interpreted through the SportMind macro layer.</div>
+        <div class="case-links">
+          <span class="case-link">config/macro-event-interpreter.yaml</span>
+        </div>
+      </div>
+      <div class="case" style="border-style: dashed;">
+        <div class="case-tag">Community</div>
+        <div class="case-title">Add yours →</div>
+        <div class="case-desc">Fork the kit, build a new use case, open a pull request. Reviewed and merged by the Trusted Reviewer community — not the founder.</div>
+        <div class="case-links">
+          <a href="https://github.com/SportMind/telegram-ai-bot-starter-kit/blob/main/CONTRIBUTING.md" class="case-link" target="_blank" rel="noopener">CONTRIBUTING.md ↗</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- PROMPTS -->
+<div class="w">
+  <section class="sec r" id="prompts">
+    <p class="sec-tag">Prompts</p>
+    <h2>Intelligence built in.</h2>
+    <p class="prose">
+      Every prompt is pre-loaded with the SportMind metrics it depends on.
+      Load as the system message in any OpenAI-compatible LLM call.
+    </p>
+    <div class="prompts">
+      <div class="prompt-row">
+        <div class="prompt-name">pre-match-signal.md</div>
+        <div class="prompt-desc">Full SMS, AFS, PS, and FTP PATH_2 reasoning chain. Produces structured JSON signal output with direction, confidence, modifiers, and flags.</div>
+        <div class="prompt-ctx">SMS · FTP PATH_2</div>
+      </div>
+      <div class="prompt-row">
+        <div class="prompt-name">sentiment-monitor.md</div>
+        <div class="prompt-desc">CHI and TVS band definitions, divergence signals, and four-quadrant interpretation logic for fan token community health.</div>
+        <div class="prompt-ctx">CHI · TVS</div>
+      </div>
+      <div class="prompt-row">
+        <div class="prompt-name">price-movement-explainer.md</div>
+        <div class="prompt-desc">Seven-layer cause attribution chain. Checks FTP PATH_2 first, works through every modifier layer before assigning primary and secondary drivers.</div>
+        <div class="prompt-ctx">All modifiers</div>
+      </div>
+      <div class="prompt-row">
+        <div class="prompt-name">macro-event-interpreter.md</div>
+        <div class="prompt-desc">MiCA, SEC/CFTC, Chiliz ecosystem, crypto cycle, and US first-mover context. Classifies events by impact direction, magnitude, and timeframe.</div>
+        <div class="prompt-ctx">Macro layer</div>
+      </div>
+    </div>
+
+    <!-- Signal output example -->
+    <div class="code-box" style="margin-top:48px">
+      <div class="code-bar">
+        <span class="code-bar-l">pre-match signal output · FTP PATH_2 active</span>
+        <span class="code-bar-r">⚽ $AFC · UCL semi-final</span>
+      </div>
+      <div class="code-body"><pre>{
+  <span class="k">"direction"</span>:           <span class="k">"HOME"</span>,
+  <span class="k">"adjusted_score"</span>:      <span class="n">71.2</span>,
+  <span class="k">"sms"</span>:                 <span class="n">82</span>,
+  <span class="k">"recommended_action"</span>:  <span class="k">"ENTER"</span>,
+  <span class="k">"composite_modifier"</span>:  <span class="n">1.14</span>,
+
+  <span class="k">"flags"</span>: {
+    <span class="k">"ftp_path2_active"</span>:    <span class="t">true</span>,
+    <span class="k">"supply_event_type"</span>:  <span class="k">"REDUCTION"</span>,
+    <span class="k">"lineup_unconfirmed"</span>:  <span class="t">false</span>
+  }
+}</pre></div>
+      <div class="code-foot">
+        <span>Arsenal vs PSG · UCL · Emirates Stadium</span>
+        <span>WIN → supply reduction · standard model sees half the signal</span>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- QUICK START -->
+<div class="w">
+  <section class="sec r" id="quick-start">
+    <p class="sec-tag">Quick start</p>
+    <h2>Two paths. One kit.</h2>
+    <p class="prose">
+      Use @LobsterClawBot and be live in minutes.
+      Or build your own manager bot with full control.
+    </p>
+    <div class="qs-g">
+      <div>
+        <div class="qs-path-tag">Path A — fastest</div>
+        <div class="qs-title">@LobsterClawBot</div>
+        <div class="qs-steps">
+          <div class="qs-step">
+            <div class="qs-num">1</div>
+            <div class="qs-text">Open <strong>@LobsterClawBot</strong> on Telegram</div>
+          </div>
+          <div class="qs-step">
+            <div class="qs-num">2</div>
+            <div class="qs-text">Tap <strong>Create a New Bot</strong> — Telegram handles bot creation natively</div>
+          </div>
+          <div class="qs-step">
+            <div class="qs-num">3</div>
+            <div class="qs-text">Load a prompt from <code>prompts/</code> as your agent's system message</div>
+          </div>
+          <div class="qs-step">
+            <div class="qs-num">4</div>
+            <div class="qs-text">Your SportMind agent is live — zero server setup required</div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="qs-path-tag">Path B — full control</div>
+        <div class="qs-title">Self-hosted manager bot</div>
+        <div class="qs-steps">
+          <div class="qs-step">
+            <div class="qs-num">1</div>
+            <div class="qs-text">Create your manager bot via <strong>@BotFather</strong>, enable Managed Bots</div>
+          </div>
+          <div class="qs-step">
+            <div class="qs-num">2</div>
+            <div class="qs-text">Clone the kit. Open <code>config/bot-api-bootstrap.yaml</code></div>
+          </div>
+          <div class="qs-step">
+            <div class="qs-num">3</div>
+            <div class="qs-text">Add your LLM key and set <code>system_prompt_file</code> to a prompt from <code>prompts/</code></div>
+          </div>
+          <div class="qs-step">
+            <div class="qs-num">4</div>
+            <div class="qs-text">Deploy with python-telegram-bot, grammY, telegraf, or aiogram</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ECOSYSTEM -->
+<div class="w">
+  <section class="sec r" id="ecosystem">
+    <p class="sec-tag">SportMind ecosystem</p>
+    <h2>Part of a larger system.</h2>
+    <p class="prose">
+      This kit is one layer of the SportMind open sports intelligence ecosystem.
+      Each component is independently usable and MIT licensed.
+    </p>
+    <div class="eco-g">
+      <div class="eco-card">
+        <div class="eco-tag">Core library</div>
+        <div class="eco-name">SportMind</div>
+        <div class="eco-desc">456 skill files. 126 calibration records. 42 sports. 96% direction accuracy. The intelligence layer everything else builds on.</div>
+        <a href="https://sportmind.dev" class="eco-link">sportmind.dev ↗</a>
+      </div>
+      <div class="eco-card active">
+        <div class="eco-tag">This repository</div>
+        <div class="eco-name">Telegram AI Bot Starter Kit</div>
+        <div class="eco-desc">Deploy SportMind-powered AI agents on Telegram via Managed Bots. 4 prompts, 6 configs, 5 use cases, community governance.</div>
+        <a href="https://github.com/SportMind/telegram-ai-bot-starter-kit" class="eco-link" target="_blank" rel="noopener">GitHub ↗</a>
+      </div>
+      <div class="eco-card">
+        <div class="eco-tag">On-chain</div>
+        <div class="eco-name">Wallet Kit</div>
+        <div class="eco-desc">Chiliz Chain integration. Fan token on-chain mechanics, FTP PATH_2 supply events, and wallet-layer intelligence primitives.</div>
+        <a href="https://github.com/SportMind/wallet-kit" class="eco-link" target="_blank" rel="noopener">GitHub ↗</a>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- GOVERNANCE -->
+<div class="w">
+  <section class="sec r" id="governance">
+    <p class="sec-tag">Governance</p>
+    <h2>Community reviewed. Founder not in the chain.</h2>
+    <p class="prose">
+      Pull requests are reviewed and merged by Trusted Reviewers — drawn from
+      Founding Calibrators in the core SportMind library. The founder may
+      contribute PRs like any other contributor.
+    </p>
+    <div class="gov-g">
+      <div class="gov-card">
+        <div class="gov-role">Contributor</div>
+        <div class="gov-desc">Anyone who opens a pull request. No prior approval needed. New use cases, prompt refinements, framework adapters.</div>
+        <div class="gov-earn">Requirement: <span>none</span></div>
+      </div>
+      <div class="gov-card">
+        <div class="gov-role">Trusted Reviewer</div>
+        <div class="gov-desc">Review rights on pull requests. Nominated by existing Trusted Reviewers. 2 approvals required for prompts and configs.</div>
+        <div class="gov-earn">Requirement: <span>Founding Calibrator or 2+ merged PRs</span></div>
+      </div>
+      <div class="gov-card">
+        <div class="gov-role">Maintainer</div>
+        <div class="gov-desc">Can merge pull requests once review thresholds are met. Governance changes require 3 Maintainer approvals.</div>
+        <div class="gov-earn">Requirement: <span>90 days + 10 reviews as Trusted Reviewer</span></div>
+      </div>
+    </div>
+    <div style="margin-top:32px">
+      <a href="https://github.com/SportMind/telegram-ai-bot-starter-kit/blob/main/GOVERNANCE.md"
+         class="btn-s" target="_blank" rel="noopener">Read GOVERNANCE.md →</a>
+    </div>
+  </section>
+</div>
+
+<!-- CTA -->
+<div class="w">
+  <section class="cta r">
+    <h2>Free to use.<br>Free to build on.</h2>
+    <p class="prose">MIT licensed. Any LLM. Any Bot API framework.<br>The kit is ready.</p>
+    <div class="cta-btns">
+      <a href="https://t.me/LobsterClawBot" class="btn-tg" target="_blank" rel="noopener">Try on Telegram ↗</a>
+      <a href="https://github.com/SportMind/telegram-ai-bot-starter-kit" class="btn-p" target="_blank" rel="noopener">View on GitHub →</a>
+      <a href="https://github.com/SportMind/telegram-ai-bot-starter-kit/blob/main/CONTRIBUTING.md"
+         class="btn-s" target="_blank" rel="noopener">Contribute</a>
+    </div>
+  </section>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="foot-i">
+    <div class="foot-logo">sportmind.dev / telegram-ai-bot-starter-kit</div>
+    <div class="foot-links">
+      <a href="https://sportmind.dev" class="foot-a">SportMind</a>
+      <a href="https://github.com/SportMind/telegram-ai-bot-starter-kit" class="foot-a" target="_blank" rel="noopener">GitHub</a>
+      <a href="https://github.com/SportMind/telegram-ai-bot-starter-kit/blob/main/CHANGELOG.md" class="foot-a" target="_blank" rel="noopener">Changelog</a>
+      <a href="https://github.com/SportMind/telegram-ai-bot-starter-kit/blob/main/CONTRIBUTING.md" class="foot-a" target="_blank" rel="noopener">Contribute</a>
+      <a href="https://github.com/SportMind/telegram-ai-bot-starter-kit/blob/main/LICENSE" class="foot-a" target="_blank" rel="noopener">MIT License</a>
+      <a href="https://core.telegram.org/bots/features#managed-bots" class="foot-a" target="_blank" rel="noopener">Managed Bots Docs</a>
+    </div>
+    <div class="foot-copy">© 2026 SportMind — Pele Roberts</div>
+  </div>
+</footer>
+
+<script>
+// THEME
+const T = ['system','light','dark'];
+const I = { system:'◐', light:'○', dark:'●' };
+function r(t) { return t==='system' ? (matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light') : t; }
+function apply(t) {
+  document.documentElement.setAttribute('data-theme', t);
+  document.documentElement.setAttribute('data-r', r(t));
+  document.getElementById('th').textContent = I[t];
+  localStorage.setItem('smt', t);
+}
+apply(localStorage.getItem('smt') || 'system');
+document.getElementById('th').addEventListener('click', () => {
+  const c = document.documentElement.getAttribute('data-theme') || 'system';
+  apply(T[(T.indexOf(c)+1) % T.length]);
+});
+matchMedia('(prefers-color-scheme:dark)').addEventListener('change', () => {
+  if (document.documentElement.getAttribute('data-theme')==='system') apply('system');
+});
+
+// REVEAL
+const io = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (!e.isIntersecting) return;
+    e.target.classList.add('in');
+    io.unobserve(e.target);
+  });
+}, { threshold: 0.07 });
+document.querySelectorAll('.r').forEach(el => io.observe(el));
+
+// SMOOTH SCROLL
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    const t = document.querySelector(a.getAttribute('href'));
+    if (t) { e.preventDefault(); t.scrollIntoView({ behavior:'smooth' }); }
+  });
+});
+</script>
+</body>
+</html>
