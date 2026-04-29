@@ -1,0 +1,174 @@
+# SportMind Telegram AI Bot Starter Kit — Calibration Bot
+# Use case: Collect calibration records from a community and feed back into
+# the SportMind calibration base at SportMind/SportMind
+# ─────────────────────────────────────────────────────────────────────────────
+
+use_case_id: calibration_bot
+version: "1.0.0"
+kit_version: "1.0.0"
+
+# ── TELEGRAM ─────────────────────────────────────────────────────────────────
+telegram:
+  bot_token: "YOUR_BOT_TOKEN"
+  webhook_url: "https://YOUR-HOST/webhook"
+  allowed_updates:
+    - message
+    - callback_query
+  parse_mode: "Markdown"
+
+  # Open to all by default — calibration contributions are public
+  allowed_chat_ids: []
+
+  commands:
+    - command: start
+      description: "Start a calibration submission"
+    - command: submit
+      description: "Submit a new prediction — usage: /submit"
+    - command: outcome
+      description: "Record outcome for your open prediction — usage: /outcome"
+    - command: mystats
+      description: "Your personal calibration record"
+    - command: leaderboard
+      description: "Top calibrators this month"
+    - command: help
+      description: "How calibration works"
+    - command: challenge
+      description: "About the First Record Challenge"
+
+# ── LLM ──────────────────────────────────────────────────────────────────────
+llm:
+  api_key: "YOUR_LLM_API_KEY"
+  base_url: "https://api.openai.com/v1"
+  model: "gpt-4o-mini"                  # Lighter model appropriate for structured extraction
+  max_tokens: 400
+  temperature: 0.1                       # Very low — extraction task, not generation
+
+  # The LLM is used for:
+  # 1. Parsing freeform submission text into structured fields
+  # 2. Validating that a submission has sufficient information
+  # 3. Generating the confirmation summary shown to the submitter
+  extraction_prompt: |
+    You are a calibration record parser for SportMind, an open sports intelligence library.
+    Extract structured fields from the user's prediction submission.
+    Return only valid JSON matching the schema below. If a required field cannot be
+    determined from the input, set it to null.
+
+    Required schema:
+    {
+      "sport": string,
+      "event": string,
+      "event_date": "YYYY-MM-DD",
+      "prediction_direction": "HOME" | "AWAY" | "DRAW" | "OVER" | "UNDER" | "YES" | "NO",
+      "confidence_pct": number (50-100),
+      "sportmind_modules_used": [string],
+      "key_modifiers": [string],
+      "notes": string | null
+    }
+
+# ── STORAGE ──────────────────────────────────────────────────────────────────
+# Where calibration records are stored.
+# Options: "local_json" | "github_pr" | "webhook"
+storage:
+  backend: "local_json"
+  local_path: "./data/calibration-records.json"
+
+  # GitHub PR backend — submits records as PRs to SportMind/SportMind
+  # Requires a GitHub PAT with repo write access
+  github:
+    enabled: false
+    repo: "SportMind/SportMind"
+    branch: "calibration-intake"
+    token: "YOUR_GITHUB_PAT"
+    pr_title_template: "Calibration record: {sport} · {event} · {date}"
+
+  # Webhook backend — POST to any endpoint
+  webhook:
+    enabled: false
+    url: "https://YOUR-ENDPOINT/calibration"
+    auth_header: "Bearer YOUR_WEBHOOK_SECRET"
+
+# ── SUBMISSION FLOW ───────────────────────────────────────────────────────────
+# Controls the multi-step conversation flow for record submission
+submission_flow:
+  # Steps in order
+  steps:
+    - id: sport
+      prompt: "What sport is this prediction for?"
+    - id: event
+      prompt: "Name the event or match (e.g. Arsenal vs PSG · UCL):"
+    - id: date
+      prompt: "When does/did it take place? (date or 'today')"
+    - id: direction
+      prompt: "Your prediction direction (HOME / AWAY / DRAW / OVER / UNDER / YES / NO):"
+    - id: confidence
+      prompt: "Confidence percentage (50–100):"
+    - id: modules
+      prompt: "Which SportMind modules or context did you use? (e.g. SMS, dew_factor, FTP PATH_2)"
+    - id: notes
+      prompt: "Any notes on your reasoning? (optional — press /skip to skip)"
+
+  # After submission, user gets a confirmation and a unique record ID
+  confirmation_template: |
+    *Submission recorded ✓*
+    Record ID: `{record_id}`
+    Sport: {sport}
+    Event: {event}
+    Direction: {prediction_direction}
+    Confidence: {confidence_pct}%
+    
+    Use /outcome {record_id} when you know the result.
+    Wrong predictions count — submit all outcomes honestly.
+
+  # Outcome recording
+  outcome_prompt: |
+    Record ID: `{record_id}`
+    Your prediction: {prediction_direction}
+    
+    What was the actual outcome?
+    (HOME / AWAY / DRAW / OVER / UNDER / YES / NO / POSTPONED / VOID)
+
+# ── LEADERBOARD ──────────────────────────────────────────────────────────────
+leaderboard:
+  enabled: true
+  window_days: 30
+  min_records_to_appear: 3
+  show_top_n: 10
+
+# ── FIRST RECORD CHALLENGE ────────────────────────────────────────────────────
+first_record_challenge:
+  enabled: true
+  target_count: 10                       # First 10 external contributors
+  founding_calibrator_message: |
+    🎖 *Founding Calibrator*
+    You are one of SportMind's first 10 external calibrators.
+    Your name will be permanently credited in the library's calibration history.
+    Details: https://github.com/SportMind/SportMind/blob/main/FIRST-RECORD-CHALLENGE.md
+
+# ── RATE LIMITING ─────────────────────────────────────────────────────────────
+rate_limits:
+  submissions_per_user_per_day: 20      # Prevent gaming
+  per_user_per_minute: 5
+  global_per_minute: 50
+
+# ── LOGGING ──────────────────────────────────────────────────────────────────
+logging:
+  level: "info"
+  log_user_ids: true                     # Needed for leaderboard attribution
+  log_message_content: false
+  retention_days: 90
+
+# ── DEPLOYMENT ───────────────────────────────────────────────────────────────
+# This kit is framework-agnostic. Deploy using any of:
+#
+# Option A — @LobsterClawBot (Managed Bots, no server needed)
+#   Open @LobsterClawBot on Telegram and configure with your system prompt.
+#   LobsterClawBot creates and manages child bots on your behalf using
+#   Telegram's native Managed Bots feature.
+#   Reference: https://core.telegram.org/bots/features#managed-bots
+#
+# Option B — Self-hosted manager bot (full control)
+#   Use any Bot API framework. See config/bot-api-bootstrap.yaml.
+#   python-telegram-bot: https://python-telegram-bot.org
+#   grammY (Node.js):    https://grammy.dev
+#   telegraf (Node.js):  https://telegraf.js.org
+#   aiogram (Python):    https://aiogram.dev

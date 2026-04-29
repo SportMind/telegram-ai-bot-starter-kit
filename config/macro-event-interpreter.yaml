@@ -1,0 +1,93 @@
+# SportMind Telegram AI Bot Starter Kit — Macro Event Interpreter
+# Use case: Real-time interpretation of regulatory, geopolitical, and crypto cycle
+# events and their expected impact on fan token markets
+# ─────────────────────────────────────────────────────────────────────────────
+
+use_case_id: macro_event_interpreter
+version: "1.0.0"
+kit_version: "1.0.0"
+
+# ── TELEGRAM ─────────────────────────────────────────────────────────────────
+telegram:
+  bot_token: "YOUR_BOT_TOKEN"
+  webhook_url: "https://YOUR-HOST/webhook"
+  allowed_updates:
+    - message
+    - callback_query
+  parse_mode: "Markdown"
+
+  allowed_chat_ids: []
+
+  commands:
+    - command: macro
+      description: "Interpret a macro event — usage: /macro [describe event]"
+    - command: regulatory
+      description: "Regulatory framework status — usage: /regulatory [MiCA | SEC | CFTC | jurisdiction]"
+    - command: cycle
+      description: "Current crypto cycle context for fan tokens"
+    - command: usfirst
+      description: "US market first-mover context for fan tokens"
+    - command: help
+      description: "About macro intelligence"
+
+# ── LLM ──────────────────────────────────────────────────────────────────────
+llm:
+  api_key: "YOUR_LLM_API_KEY"
+  base_url: "https://api.openai.com/v1"
+  model: "gpt-4o"
+  max_tokens: 900
+  temperature: 0.2
+
+  system_prompt_file: "prompts/macro-event-interpreter.md"
+
+# ── SPORTMIND INTELLIGENCE CONTEXT ───────────────────────────────────────────
+sportmind_context:
+  base_path: "../SportMind/telegram/"
+  always_load:
+    - "context/regulatory-frameworks.md"
+    - "context/crypto-cycle-context.md"
+    - "context/us-market-signal.md"       # US first-mover macro signal
+    - "context/geopolitical-context.md"
+    - "context/fan-token-lifecycle.md"
+
+# ── RESPONSE FORMATTING ───────────────────────────────────────────────────────
+formatting:
+  macro_template: |
+    *Macro Event Analysis*
+    Event: {event_summary}
+    Category: {category}
+    
+    *SportMind interpretation*
+    {interpretation}
+    
+    *Expected impact on fan tokens*
+    Direction: {impact_direction}
+    Magnitude: {impact_magnitude}
+    Timeframe: {timeframe}
+    
+    *Modifiers affected*
+    {modifiers_affected}
+    
+    _SportMind macro layer · {timestamp}_
+
+# ── LOGGING ──────────────────────────────────────────────────────────────────
+logging:
+  level: "info"
+  log_user_ids: false
+  log_message_content: false
+
+# ── DEPLOYMENT ───────────────────────────────────────────────────────────────
+# This kit is framework-agnostic. Deploy using any of:
+#
+# Option A — @LobsterClawBot (Managed Bots, no server needed)
+#   Open @LobsterClawBot on Telegram and configure with your system prompt.
+#   LobsterClawBot creates and manages child bots on your behalf using
+#   Telegram's native Managed Bots feature.
+#   Reference: https://core.telegram.org/bots/features#managed-bots
+#
+# Option B — Self-hosted manager bot (full control)
+#   Use any Bot API framework. See config/bot-api-bootstrap.yaml.
+#   python-telegram-bot: https://python-telegram-bot.org
+#   grammY (Node.js):    https://grammy.dev
+#   telegraf (Node.js):  https://telegraf.js.org
+#   aiogram (Python):    https://aiogram.dev

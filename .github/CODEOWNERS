@@ -1,0 +1,95 @@
+# CODEOWNERS — SportMind Telegram AI Bot Starter Kit
+# ─────────────────────────────────────────────────────────────────────────────
+# This file defines who is automatically requested to review pull requests
+# based on which files are changed. GitHub enforces these rules: a PR cannot
+# be merged until the required reviewers have approved it.
+#
+# Review rights are held by the community, not the project founder.
+# See GOVERNANCE.md for how Trusted Reviewers are appointed.
+#
+# Format: <path pattern>  <@reviewer> [<@reviewer> ...]
+# Docs: https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+# ─────────────────────────────────────────────────────────────────────────────
+
+# ── DEFAULT ──────────────────────────────────────────────────────────────────
+# All files not matched by a more specific rule require review from the
+# global Trusted Reviewer team. This team is maintained in GitHub and
+# populated as Founding Calibrators are confirmed.
+#
+# Until the first Trusted Reviewers are appointed, this file is a declaration
+# of intent. The first PRs will be reviewed by whoever is nominated first.
+#
+# Replace the placeholder team below with your GitHub org team once created:
+# * @SportMind/trusted-reviewers
+
+* @SportMind/trusted-reviewers
+
+
+# ── PROMPTS ───────────────────────────────────────────────────────────────────
+# Prompt changes have the highest impact — they define agent intelligence.
+# Require 2 reviewers. Prefer reviewers who hold calibration records in the
+# relevant sport or domain (enforced by convention, not tooling).
+#
+# Note: GitHub CODEOWNERS does not enforce a minimum reviewer count here —
+# that is set in branch protection rules (Settings → Branches → main →
+# Require N approvals). Set this to 2 for the prompts/ directory.
+
+prompts/                        @SportMind/trusted-reviewers
+
+
+# ── CONFIGS ───────────────────────────────────────────────────────────────────
+# Config changes affect deployed bot behaviour. Require Trusted Reviewer sign-off.
+
+config/                         @SportMind/trusted-reviewers
+
+
+# ── EXAMPLES ──────────────────────────────────────────────────────────────────
+# Examples are the primary onboarding surface. Accuracy matters.
+
+examples/                       @SportMind/trusted-reviewers
+
+
+# ── GOVERNANCE AND OWNERSHIP ──────────────────────────────────────────────────
+# Changes to GOVERNANCE.md, CODEOWNERS, and LICENSE require Maintainer-level
+# approval (3 approvals, as specified in GOVERNANCE.md).
+# The Maintainers team is a subset of Trusted Reviewers.
+
+GOVERNANCE.md                   @SportMind/maintainers
+.github/CODEOWNERS              @SportMind/maintainers
+LICENSE                         @SportMind/maintainers
+
+
+# ── CONTRIBUTING AND README ───────────────────────────────────────────────────
+# Documentation changes that affect contributor onboarding or public-facing
+# description of the kit. One Trusted Reviewer approval sufficient.
+
+CONTRIBUTING.md                 @SportMind/trusted-reviewers
+README.md                       @SportMind/trusted-reviewers
+
+
+# ── CHANGELOG ────────────────────────────────────────────────────────────────
+# Changelog is updated as part of every release PR. Any Trusted Reviewer can approve.
+
+CHANGELOG.md                    @SportMind/trusted-reviewers
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# SETUP CHECKLIST (for repository administrators)
+#
+# 1. Create two GitHub teams in your org:
+#    - @SportMind/trusted-reviewers  (Trusted Reviewers + Maintainers)
+#    - @SportMind/maintainers        (Maintainers only — subset of above)
+#
+# 2. Enable branch protection on `main`:
+#    Settings → Branches → Add rule → Branch name: main
+#    ✓ Require a pull request before merging
+#    ✓ Require approvals: 2 (for prompts/ and configs/), 1 (for docs)
+#    ✓ Require review from Code Owners
+#    ✓ Dismiss stale pull request approvals when new commits are pushed
+#    ✓ Restrict who can push to matching branches → @SportMind/maintainers
+#
+# 3. Add first Trusted Reviewers to @SportMind/trusted-reviewers as
+#    Founding Calibrators are confirmed in SportMind/SportMind.
+#
+# 4. Remove this checklist comment once setup is complete.
+# ─────────────────────────────────────────────────────────────────────────────

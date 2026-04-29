@@ -1,0 +1,149 @@
+# SportMind Telegram AI Bot Starter Kit — Fan Token Trading Bot
+# Use case: Chiliz fan token intelligence for a private or group trading channel
+# Canonical example: $AFC Arsenal FTP PATH_2
+# ─────────────────────────────────────────────────────────────────────────────
+
+use_case_id: fan_token_trading_bot
+version: "1.0.0"
+kit_version: "1.0.0"
+
+# ── TELEGRAM ─────────────────────────────────────────────────────────────────
+telegram:
+  bot_token: "YOUR_BOT_TOKEN"            # From @BotFather
+  webhook_url: "https://YOUR-HOST/webhook"
+  allowed_updates:
+    - message
+    - callback_query
+  parse_mode: "Markdown"
+
+  # Restrict to specific chat IDs (recommended for trading bots)
+  # Leave empty to allow all chats
+  allowed_chat_ids:
+    - YOUR_PRIVATE_CHANNEL_ID
+    - YOUR_GROUP_ID
+
+  # Commands registered with BotFather
+  commands:
+    - command: start
+      description: "Introduce the bot and show available commands"
+    - command: signal
+      description: "Request a fan token signal — usage: /signal $AFC"
+    - command: sentiment
+      description: "Current CHI/TVS sentiment for a token — usage: /sentiment $AFC"
+    - command: ftp
+      description: "FTP PATH_2 status for a token — usage: /ftp $AFC"
+    - command: macro
+      description: "Current macro context affecting fan tokens"
+    - command: help
+      description: "Show full command reference"
+
+# ── LLM ──────────────────────────────────────────────────────────────────────
+llm:
+  api_key: "YOUR_LLM_API_KEY"
+  base_url: "https://api.openai.com/v1"  # Replace with your endpoint
+  model: "gpt-4o"
+  max_tokens: 800
+  temperature: 0.2                        # Low temperature for signal consistency
+
+  # System prompt loaded from prompts/ directory
+  # For /signal and /ftp commands
+  signal_system_prompt_file: "prompts/pre-match-signal.md"
+
+  # For /sentiment commands
+  sentiment_system_prompt_file: "prompts/sentiment-monitor.md"
+
+  # For /macro commands
+  macro_system_prompt_file: "prompts/macro-event-interpreter.md"
+
+  # For price movement attribution questions
+  explainer_system_prompt_file: "prompts/price-movement-explainer.md"
+
+# ── SPORTMIND INTELLIGENCE CONTEXT ───────────────────────────────────────────
+# These files are loaded and injected into the system prompt as context.
+# Paths are relative to SportMind/SportMind if cloned alongside this kit,
+# or can point to local copies.
+sportmind_context:
+  base_path: "../SportMind/telegram/"     # Adjust if SportMind is elsewhere
+
+  # Loaded for all prompts
+  always_load:
+    - "context/fan-token-lifecycle.md"
+    - "context/gamified-tokenomics.md"
+    - "context/chiliz-chain-overview.md"
+
+  # Loaded only for signal prompts
+  signal_context:
+    - "context/ftp-path2-mechanics.md"
+    - "context/composite-metrics-reference.md"
+
+  # Loaded only for macro prompts
+  macro_context:
+    - "context/regulatory-frameworks.md"
+    - "context/crypto-cycle-context.md"
+
+# ── RESPONSE FORMATTING ───────────────────────────────────────────────────────
+formatting:
+  # Signal output uses structured blocks
+  signal_template: |
+    *SportMind Signal*
+    Token: {token}
+    Direction: {direction}
+    Confidence: {confidence}%
+    
+    *Modifiers active*
+    {modifiers}
+    
+    *Flags*
+    {flags}
+    
+    _Generated {timestamp} · SportMind v{version}_
+
+  # Sentiment output
+  sentiment_template: |
+    *Community Sentiment — {token}*
+    CHI: {chi_score} / 100
+    TVS: {tvs_score} / 100
+    Trend: {trend_direction}
+    
+    {narrative}
+    
+    _SportMind · {timestamp}_
+
+  # FTP status
+  ftp_template: |
+    *FTP PATH_2 Status — {token}*
+    Phase: {phase}
+    Supply event type: {supply_event}
+    Last trigger: {last_trigger}
+    
+    {interpretation}
+    
+    _SportMind · {timestamp}_
+
+# ── RATE LIMITING ─────────────────────────────────────────────────────────────
+rate_limits:
+  per_user_per_minute: 5
+  per_chat_per_minute: 20
+  global_per_minute: 100
+
+# ── LOGGING ──────────────────────────────────────────────────────────────────
+logging:
+  level: "info"
+  log_user_ids: false          # Set true only for debugging; respect privacy
+  log_message_content: false   # Never log message content in production
+
+# ── DEPLOYMENT ───────────────────────────────────────────────────────────────
+# This kit is framework-agnostic. Deploy using any of:
+#
+# Option A — @LobsterClawBot (Managed Bots, no server needed)
+#   Open @LobsterClawBot on Telegram and configure with your system prompt.
+#   LobsterClawBot creates and manages child bots on your behalf using
+#   Telegram's native Managed Bots feature.
+#   Reference: https://core.telegram.org/bots/features#managed-bots
+#
+# Option B — Self-hosted manager bot (full control)
+#   Use any Bot API framework. See config/bot-api-bootstrap.yaml.
+#   python-telegram-bot: https://python-telegram-bot.org
+#   grammY (Node.js):    https://grammy.dev
+#   telegraf (Node.js):  https://telegraf.js.org
+#   aiogram (Python):    https://aiogram.dev

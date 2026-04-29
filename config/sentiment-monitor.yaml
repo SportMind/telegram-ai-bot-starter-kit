@@ -1,0 +1,93 @@
+# SportMind Telegram AI Bot Starter Kit — Sentiment Monitor
+# Use case: Monitor fan token community sentiment in a group, surfacing CHI and TVS signals
+# ─────────────────────────────────────────────────────────────────────────────
+
+use_case_id: sentiment_monitor
+version: "1.0.0"
+kit_version: "1.0.0"
+
+# ── TELEGRAM ─────────────────────────────────────────────────────────────────
+telegram:
+  bot_token: "YOUR_BOT_TOKEN"
+  webhook_url: "https://YOUR-HOST/webhook"
+  allowed_updates:
+    - message
+    - callback_query
+  parse_mode: "Markdown"
+
+  allowed_chat_ids:
+    - YOUR_COMMUNITY_GROUP_ID
+
+  commands:
+    - command: sentiment
+      description: "Current CHI/TVS snapshot — usage: /sentiment [$TOKEN or team name]"
+    - command: trend
+      description: "Sentiment trend over last 7 days — usage: /trend [$TOKEN]"
+    - command: alert
+      description: "Set a CHI alert threshold — usage: /alert [$TOKEN] [threshold]"
+    - command: help
+      description: "How the sentiment monitor works"
+
+# ── LLM ──────────────────────────────────────────────────────────────────────
+llm:
+  api_key: "YOUR_LLM_API_KEY"
+  base_url: "https://api.openai.com/v1"
+  model: "gpt-4o"
+  max_tokens: 600
+  temperature: 0.25
+
+  system_prompt_file: "prompts/sentiment-monitor.md"
+
+# ── SPORTMIND INTELLIGENCE CONTEXT ───────────────────────────────────────────
+sportmind_context:
+  base_path: "../SportMind/telegram/"
+  always_load:
+    - "context/chi-definition.md"
+    - "context/tvs-definition.md"
+    - "context/fan-token-lifecycle.md"
+    - "context/community-health-signals.md"
+
+# ── PASSIVE MONITORING ───────────────────────────────────────────────────────
+# When enabled, the bot silently monitors group messages and periodically
+# surfaces a CHI/TVS sentiment snapshot without being invoked.
+passive_monitoring:
+  enabled: false                         # Requires explicit group admin consent
+  snapshot_interval_hours: 24
+  min_messages_before_snapshot: 50      # Only snapshot if group has been active
+  snapshot_channel_id: null             # Post snapshots here instead of the monitored group
+
+# ── ALERTS ───────────────────────────────────────────────────────────────────
+alerts:
+  # CHI drop alert — fires when community health drops below threshold
+  chi_drop:
+    enabled: false
+    default_threshold: 35               # Alert when CHI < 35
+    cooldown_hours: 6                    # Don't re-alert within 6 hours
+
+  # TVS spike alert — unusual token velocity
+  tvs_spike:
+    enabled: false
+    default_threshold: 80               # Alert when TVS > 80
+    cooldown_hours: 2
+
+# ── LOGGING ──────────────────────────────────────────────────────────────────
+logging:
+  level: "info"
+  log_user_ids: false
+  log_message_content: false
+
+# ── DEPLOYMENT ───────────────────────────────────────────────────────────────
+# This kit is framework-agnostic. Deploy using any of:
+#
+# Option A — @LobsterClawBot (Managed Bots, no server needed)
+#   Open @LobsterClawBot on Telegram and configure with your system prompt.
+#   LobsterClawBot creates and manages child bots on your behalf using
+#   Telegram's native Managed Bots feature.
+#   Reference: https://core.telegram.org/bots/features#managed-bots
+#
+# Option B — Self-hosted manager bot (full control)
+#   Use any Bot API framework. See config/bot-api-bootstrap.yaml.
+#   python-telegram-bot: https://python-telegram-bot.org
+#   grammY (Node.js):    https://grammy.dev
+#   telegraf (Node.js):  https://telegraf.js.org
+#   aiogram (Python):    https://aiogram.dev

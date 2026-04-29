@@ -1,0 +1,105 @@
+# SportMind Telegram AI Bot Starter Kit — Bot API Bootstrap
+# ─────────────────────────────────────────────────────────────────────────────
+# Framework-agnostic skeleton for deploying SportMind agents via Telegram's
+# Managed Bots feature (https://core.telegram.org/bots/features#managed-bots)
+#
+# TWO PATHS:
+#
+# PATH A — Use @LobsterClawBot (no server required)
+#   @LobsterClawBot is a Managed Bots manager on Telegram. It creates and
+#   manages child bots on behalf of your users without you running any server.
+#   Configure it with a prompt from prompts/ via its Telegram interface.
+#   → Open https://t.me/LobsterClawBot
+#
+# PATH B — Build your own manager bot (full control)
+#   Use this file as your configuration reference. Implement using any
+#   Bot API framework listed below.
+# ─────────────────────────────────────────────────────────────────────────────
+
+use_case_id: bot_api_bootstrap
+version: "1.1.0"
+kit_version: "1.1.0"
+
+# ── MANAGER BOT CREDENTIALS ───────────────────────────────────────────────────
+telegram:
+  manager_bot_token: "YOUR_MANAGER_BOT_TOKEN"  # From @BotFather
+  # Managed Bots must be enabled for this token in BotFather settings
+
+  # Webhook vs polling — choose one for receiving updates
+  delivery:
+    mode: "webhook"              # "webhook" | "polling"
+    webhook_url: "https://YOUR-HOST/webhook"
+    # For polling: no additional config; use getUpdates long-polling
+
+  parse_mode: "Markdown"
+
+# ── LLM ──────────────────────────────────────────────────────────────────────
+llm:
+  api_key: "YOUR_LLM_API_KEY"
+  base_url: "https://api.openai.com/v1"   # Any OpenAI-compatible endpoint
+  model: "gpt-4o"
+  max_tokens: 800
+  temperature: 0.2
+
+  # Load a prompt from prompts/ as the system message
+  system_prompt_file: "prompts/pre-match-signal.md"
+
+# ── SPORTMIND INTELLIGENCE CONTEXT ───────────────────────────────────────────
+sportmind_context:
+  base_path: "../SportMind/telegram/"
+  load:
+    - "context/fan-token-lifecycle.md"
+    - "context/composite-metrics-reference.md"
+
+# ── HOW MANAGED BOTS WORKS ───────────────────────────────────────────────────
+# Your manager bot can create child bots on behalf of users.
+# The Telegram platform handles bot creation natively — users see a
+# confirmation dialog: "[YourBot] would like to create and manage a
+# chatbot on your behalf."
+#
+# Once a child bot is created:
+# - It has its own username and chat
+# - All messages to the child bot are routed to your manager bot
+# - You respond using the child bot's token via the manager bot connection
+# - The child bot's behaviour is entirely defined by your system prompt
+#
+# For full API details:
+# https://core.telegram.org/bots/features#managed-bots
+# https://core.telegram.org/bots/features#creating-your-own-management-bot
+
+# ── FRAMEWORK IMPLEMENTATION NOTES ───────────────────────────────────────────
+# The logic below is pseudo-code. Implement in your framework of choice.
+#
+# STEP 1: Load intelligence at startup
+#   system_prompt = read_file(llm.system_prompt_file)
+#   for each file in sportmind_context.load:
+#     system_prompt += "\n\n" + read_file(file)
+#
+# STEP 2: Handle incoming messages from child bots
+#   on_message(update):
+#     chat_id    = update.message.chat_id
+#     user_text  = update.message.text
+#     history    = get_conversation_history(chat_id)
+#
+# STEP 3: Call LLM
+#     messages = [
+#       { role: "system",    content: system_prompt },
+#       ...history,
+#       { role: "user",      content: user_text }
+#     ]
+#     response = POST llm.base_url + "/chat/completions"
+#                with { model, max_tokens, temperature, messages }
+#     reply = response.choices[0].message.content
+#
+# STEP 4: Save history and reply
+#     save_history(chat_id, user_text, reply)
+#     send_message(chat_id, reply, parse_mode="Markdown")
+#
+# ── FRAMEWORK REFERENCES ─────────────────────────────────────────────────────
+# python-telegram-bot  https://python-telegram-bot.org          (Python)
+# grammY               https://grammy.dev                       (Node.js/Deno)
+# telegraf             https://telegraf.js.org                  (Node.js)
+# aiogram              https://aiogram.dev                      (Python/asyncio)
+#
+# All four support webhook and polling modes and the full Bot API surface
+# required for Managed Bots.

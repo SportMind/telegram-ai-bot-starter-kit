@@ -1,0 +1,131 @@
+# SportMind Telegram AI Bot Starter Kit — Match Intelligence Bot
+# Use case: Pre-match briefings delivered to a supporter group or community channel
+# Ideal deployment: football supporter groups, sports community channels
+# ─────────────────────────────────────────────────────────────────────────────
+
+use_case_id: match_intelligence_bot
+version: "1.0.0"
+kit_version: "1.0.0"
+
+# ── TELEGRAM ─────────────────────────────────────────────────────────────────
+telegram:
+  bot_token: "YOUR_BOT_TOKEN"
+  webhook_url: "https://YOUR-HOST/webhook"
+  allowed_updates:
+    - message
+    - callback_query
+    - inline_query
+  parse_mode: "Markdown"
+
+  # For supporter groups, you may want the bot to respond in any group it's added to
+  # Set allowed_chat_ids to restrict, or leave empty for open deployment
+  allowed_chat_ids: []
+
+  commands:
+    - command: start
+      description: "Introduce the bot"
+    - command: prematch
+      description: "Pre-match briefing — usage: /prematch [team] vs [team]"
+    - command: conditions
+      description: "Match conditions report — usage: /conditions [venue]"
+    - command: form
+      description: "Squad form and availability — usage: /form [team]"
+    - command: rivalry
+      description: "Rivalry and history context — usage: /rivalry [team] vs [team]"
+    - command: help
+      description: "Show all commands"
+
+# ── LLM ──────────────────────────────────────────────────────────────────────
+llm:
+  api_key: "YOUR_LLM_API_KEY"
+  base_url: "https://api.openai.com/v1"
+  model: "gpt-4o"
+  max_tokens: 1200                        # Match briefings benefit from more detail
+  temperature: 0.3
+
+  system_prompt_file: "prompts/pre-match-signal.md"
+
+  # Additional personality layer for supporter-facing tone
+  # Appended after the SportMind system prompt
+  tone_addendum: |
+    You are briefing passionate, informed football supporters — not traders.
+    Frame intelligence in supporter-relevant terms: what this means for the match,
+    what to watch for, what signals are unusual. Avoid financial language.
+    Keep responses under 300 words unless a /prematch full briefing is requested.
+
+# ── SPORTMIND INTELLIGENCE CONTEXT ───────────────────────────────────────────
+sportmind_context:
+  base_path: "../SportMind/telegram/"
+
+  always_load:
+    - "context/football-domain.md"
+    - "context/athlete-intelligence-overview.md"
+
+  match_context:
+    - "context/composite-metrics-reference.md"
+    - "context/match-condition-signals.md"
+    - "context/rivalry-intelligence.md"
+
+# ── SCHEDULED BRIEFINGS ──────────────────────────────────────────────────────
+# Optional: push pre-match briefings automatically before listed fixtures
+# Requires a cron job or scheduled task in your deployment environment
+scheduled_briefings:
+  enabled: false                          # Set true to enable push briefings
+  push_before_kickoff_minutes: 90
+  target_chat_id: "YOUR_GROUP_ID"
+  fixture_source: "manual"               # "manual" = list below; "api" = external fixture feed
+
+  # Manual fixture list (only used when fixture_source: manual)
+  fixtures: []
+  # Example:
+  # fixtures:
+  #   - home: "Arsenal"
+  #     away: "Chelsea"
+  #     kickoff: "2026-05-03T15:00:00Z"
+  #     competition: "Premier League"
+
+# ── RESPONSE FORMATTING ───────────────────────────────────────────────────────
+formatting:
+  prematch_template: |
+    *Pre-Match Briefing*
+    {home} vs {away}
+    {competition} · {venue}
+    
+    *Signal*
+    Direction: {direction} ({confidence}% confidence)
+    
+    *Key factors*
+    {key_factors}
+    
+    *Watch for*
+    {watch_for}
+    
+    _SportMind · {timestamp}_
+
+# ── RATE LIMITING ─────────────────────────────────────────────────────────────
+rate_limits:
+  per_user_per_minute: 3
+  per_chat_per_minute: 15
+  global_per_minute: 60
+
+# ── LOGGING ──────────────────────────────────────────────────────────────────
+logging:
+  level: "info"
+  log_user_ids: false
+  log_message_content: false
+
+# ── DEPLOYMENT ───────────────────────────────────────────────────────────────
+# This kit is framework-agnostic. Deploy using any of:
+#
+# Option A — @LobsterClawBot (Managed Bots, no server needed)
+#   Open @LobsterClawBot on Telegram and configure with your system prompt.
+#   LobsterClawBot creates and manages child bots on your behalf using
+#   Telegram's native Managed Bots feature.
+#   Reference: https://core.telegram.org/bots/features#managed-bots
+#
+# Option B — Self-hosted manager bot (full control)
+#   Use any Bot API framework. See config/bot-api-bootstrap.yaml.
+#   python-telegram-bot: https://python-telegram-bot.org
+#   grammY (Node.js):    https://grammy.dev
+#   telegraf (Node.js):  https://telegraf.js.org
+#   aiogram (Python):    https://aiogram.dev
