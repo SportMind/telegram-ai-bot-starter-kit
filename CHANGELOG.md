@@ -1,5 +1,19 @@
 # Changelog — SportMind Telegram AI Bot Starter Kit
 
+## v1.3.0 — 2026-04-30
+
+Website page updates: terminology corrections and data accuracy pass.
+
+### Changed
+
+**SportMind Suite section** (`telegram-ai-bot-starter-kit` website page)
+- Section header renamed from "SportMind ecosystem" to "SportMind Suite"
+- Body copy updated from "open sports intelligence ecosystem" to "open sports intelligence suite" — consistent with terminology used across the SportMind suite
+- Skill file count updated from 456 to 594, reflecting current core library state
+- Wallet Kit repository link corrected from `SportMind/wallet-kit` to `SportMind/fan-token-agentic-wallet-starter-kit`
+
+---
+
 ## v1.2.0 — 2026-04-29
 
 Introduced community-led governance. The project founder no longer reviews
