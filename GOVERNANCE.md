@@ -130,7 +130,7 @@ contributors reach 2 merged PRs.*
 
 ## Founder role
 
-[@pele-roberts](https://github.com/pele-roberts) created the SportMind ecosystem
+[@pele-roberts](https://github.com/pele-roberts) created the SportMind suite
 and this kit. The founder role carries no special review or merge rights over
 community contributions. The founder may contribute PRs like any other
 contributor — subject to the same review process.

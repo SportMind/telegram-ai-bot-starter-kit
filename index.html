@@ -7,8 +7,8 @@
 <meta name="description" content="Deploy SportMind-powered AI agent bots on Telegram in minutes. Pre-built prompts, configs, and examples. MIT licensed.">
 <meta property="og:title" content="Telegram AI Bot Starter Kit — SportMind">
 <meta property="og:description" content="Deploy SportMind-powered AI agent bots on Telegram in minutes.">
-<meta property="og:url" content="https://sportmind.dev/telegram">
-<link rel="canonical" href="https://sportmind.dev/telegram">
+<meta property="og:url" content="https://sportmind.github.io/telegram-ai-bot-starter-kit">
+<link rel="canonical" href="https://sportmind.github.io/telegram-ai-bot-starter-kit">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -330,7 +330,7 @@ h2 {
 /* ── ECOSYSTEM ───────────────────────────────────────────────────── */
 .eco-g {
   margin-top: 48px;
-  display: grid; grid-template-columns: repeat(3,1fr); gap: 16px;
+  display: grid; grid-template-columns: repeat(4,1fr); gap: 16px;
 }
 .eco-card {
   border: 1px solid var(--border); border-radius: 8px;
@@ -421,7 +421,60 @@ footer { border-top: 1px solid var(--border); padding: 32px 0; }
 .foot-a:hover { color: var(--text-2); }
 .foot-copy { font-family: var(--mono); font-size: 11px; color: var(--text-3); }
 
-/* ── RESPONSIVE ─────────────────────────────────────────────────── */
+/* ── MOBILE MENU ─────────────────────────────────────────────────── */
+.nav-hamburger {
+  display: none;
+  background: none; border: 1px solid var(--border);
+  color: var(--text-2);
+  width: 44px; height: 44px;
+  align-items: center; justify-content: center;
+  border-radius: 5px; cursor: pointer; font-size: 18px;
+  transition: color .15s, border-color .15s;
+  flex-shrink: 0;
+}
+.nav-hamburger:hover { color: var(--text); border-color: var(--text-3); }
+.mobile-menu {
+  display: none;
+  position: fixed; top: 52px; left: 0; right: 0;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+  padding: 12px 24px 20px;
+  z-index: 49;
+  flex-direction: column; gap: 4px;
+}
+.mobile-menu.open { display: flex; }
+.mobile-menu-a {
+  font-size: 15px; color: var(--text-2);
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border);
+  display: block;
+  min-height: 44px; display: flex; align-items: center;
+  transition: color .15s;
+}
+.mobile-menu-a:last-child { border-bottom: none; }
+.mobile-menu-a:hover { color: var(--text); }
+
+/* ── TOUCH TARGETS ───────────────────────────────────────────────── */
+.btn-p, .btn-tg, .btn-s {
+  min-height: 44px;
+  display: inline-flex; align-items: center; justify-content: center;
+}
+.nav-gh { min-height: 44px; }
+.th { min-height: 44px; width: 44px; }
+
+/* ── RESPONSIVE — 1024px ─────────────────────────────────────────── */
+@media (max-width: 1024px) {
+  .eco-g { grid-template-columns: repeat(2,1fr); }
+  .gov-g { grid-template-columns: repeat(2,1fr); }
+}
+
+/* ── RESPONSIVE — 768px ──────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .qs-g { grid-template-columns: 1fr; gap: 40px; }
+  .cal-g { grid-template-columns: 1fr; gap: 48px; }
+}
+
+/* ── RESPONSIVE — 720px (mobile) ────────────────────────────────── */
 @media (max-width: 720px) {
   .stats-g { grid-template-columns: 1fr 1fr; }
   .stat { border-right: none; border-bottom: 1px solid var(--border); padding: 20px; }
@@ -436,8 +489,31 @@ footer { border-top: 1px solid var(--border); padding: 32px 0; }
   .flow-step { grid-template-columns: 40px 1fr; }
   .flow-icon { display: none; }
   .nav-r .nav-a { display: none; }
+  .nav-r .nav-gh { display: none; }
+  .nav-hamburger { display: inline-flex; }
   .foot-links { display: none; }
   .hero { padding: 80px 0 72px; }
+  .btns { flex-direction: column; align-items: center; }
+  .btns .btn-p, .btns .btn-tg, .btns .btn-s {
+    width: 100%; max-width: 320px; justify-content: center;
+  }
+  .cta-btns { flex-direction: column; align-items: center; }
+  .cta-btns .btn-p, .cta-btns .btn-tg, .cta-btns .btn-s {
+    width: 100%; max-width: 320px; justify-content: center;
+  }
+  .code-body { font-size: 12px; padding: 20px 16px; }
+  .foot-i { flex-direction: column; align-items: flex-start; gap: 12px; }
+  .w { padding: 0 20px; }
+  .ww { padding: 0 20px; }
+}
+
+/* ── RESPONSIVE — 375px (small mobile) ──────────────────────────── */
+@media (max-width: 390px) {
+  h1 { font-size: 32px; }
+  .stat-n { font-size: 26px; }
+  .nav-i { padding: 0 16px; }
+  .w { padding: 0 16px; }
+  .ww { padding: 0 16px; }
 }
 
 /* ── REVEAL ─────────────────────────────────────────────────────── */
@@ -460,20 +536,26 @@ footer { border-top: 1px solid var(--border); padding: 32px 0; }
       <a href="#how-it-works" class="nav-a">How it works</a>
       <a href="#use-cases" class="nav-a">Use cases</a>
       <a href="#quick-start" class="nav-a">Quick start</a>
+      <a href="#suite" class="nav-a">Suite</a>
       <a href="https://github.com/SportMind/telegram-ai-bot-starter-kit" class="nav-gh" target="_blank" rel="noopener">GitHub ↗</a>
       <button class="th" id="th" aria-label="Toggle theme">◐</button>
+      <button class="nav-hamburger" id="hamburger" aria-label="Open menu">☰</button>
     </div>
   </div>
 </nav>
 
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mobile-menu">
+  <a href="#how-it-works" class="mobile-menu-a">How it works</a>
+  <a href="#use-cases" class="mobile-menu-a">Use cases</a>
+  <a href="#quick-start" class="mobile-menu-a">Quick start</a>
+  <a href="#suite" class="mobile-menu-a">Suite</a>
+  <a href="https://github.com/SportMind/telegram-ai-bot-starter-kit" class="mobile-menu-a" target="_blank" rel="noopener">GitHub ↗</a>
+</div>
+
 <!-- HERO -->
 <div class="w">
   <section class="hero r">
-    <div class="badge">
-      <div class="badge-dot"></div>
-      <span class="badge-tg">Telegram Managed Bots</span>
-      &nbsp;·&nbsp; MIT License &nbsp;·&nbsp; v1.2.0
-    </div>
     <h1>AI agent bots<br><strong>for Telegram</strong></h1>
     <p class="sub">
       Deploy SportMind-powered AI agents on Telegram in minutes.
@@ -734,9 +816,9 @@ footer { border-top: 1px solid var(--border); padding: 32px 0; }
   </section>
 </div>
 
-<!-- ECOSYSTEM -->
+<!-- SUITE -->
 <div class="w">
-  <section class="sec r" id="ecosystem">
+  <section class="sec r" id="suite">
     <p class="sec-tag">SportMind Suite</p>
     <h2>Part of a larger system.</h2>
     <p class="prose">
@@ -758,9 +840,15 @@ footer { border-top: 1px solid var(--border); padding: 32px 0; }
       </div>
       <div class="eco-card">
         <div class="eco-tag">On-chain</div>
-        <div class="eco-name">Wallet Kit</div>
+        <div class="eco-name">Fan Token Agentic Wallet Starter Kit</div>
         <div class="eco-desc">Chiliz Chain integration. Fan token on-chain mechanics, FTP PATH_2 supply events, and wallet-layer intelligence primitives.</div>
         <a href="https://github.com/SportMind/fan-token-agentic-wallet-starter-kit" class="eco-link" target="_blank" rel="noopener">GitHub ↗</a>
+      </div>
+      <div class="eco-card">
+        <div class="eco-tag">MCP</div>
+        <div class="eco-name">SportMind MCP Server</div>
+        <div class="eco-desc">Model Context Protocol server exposing SportMind intelligence primitives to any MCP-compatible AI agent or development environment.</div>
+        <a href="https://github.com/SportMind/SportMind" class="eco-link" target="_blank" rel="noopener">GitHub ↗</a>
       </div>
     </div>
   </section>
@@ -817,7 +905,7 @@ footer { border-top: 1px solid var(--border); padding: 32px 0; }
 <!-- FOOTER -->
 <footer>
   <div class="foot-i">
-    <div class="foot-logo">sportmind.dev / telegram-ai-bot-starter-kit</div>
+    <div class="foot-logo">sportmind.github.io/telegram-ai-bot-starter-kit · v1.4.0</div>
     <div class="foot-links">
       <a href="https://sportmind.dev" class="foot-a">SportMind</a>
       <a href="https://github.com/SportMind/telegram-ai-bot-starter-kit" class="foot-a" target="_blank" rel="noopener">GitHub</a>
@@ -826,7 +914,7 @@ footer { border-top: 1px solid var(--border); padding: 32px 0; }
       <a href="https://github.com/SportMind/telegram-ai-bot-starter-kit/blob/main/LICENSE" class="foot-a" target="_blank" rel="noopener">MIT License</a>
       <a href="https://core.telegram.org/bots/features#managed-bots" class="foot-a" target="_blank" rel="noopener">Managed Bots Docs</a>
     </div>
-    <div class="foot-copy">© 2026 SportMind — Pele Roberts</div>
+    <div class="foot-copy">© 2026 SportMind</div>
   </div>
 </footer>
 
@@ -848,6 +936,22 @@ document.getElementById('th').addEventListener('click', () => {
 });
 matchMedia('(prefers-color-scheme:dark)').addEventListener('change', () => {
   if (document.documentElement.getAttribute('data-theme')==='system') apply('system');
+});
+
+// HAMBURGER
+const hamburger = document.getElementById('hamburger');
+const mobileMenu = document.getElementById('mobile-menu');
+hamburger.addEventListener('click', () => {
+  const open = mobileMenu.classList.toggle('open');
+  hamburger.textContent = open ? '✕' : '☰';
+  hamburger.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+});
+// Close mobile menu on link click
+mobileMenu.querySelectorAll('a').forEach(a => {
+  a.addEventListener('click', () => {
+    mobileMenu.classList.remove('open');
+    hamburger.textContent = '☰';
+  });
 });
 
 // REVEAL

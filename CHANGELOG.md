@@ -1,5 +1,65 @@
 # Changelog — SportMind Telegram AI Bot Starter Kit
 
+## v1.4.0 — 2026-04-30
+
+Full site and repository audit. All terminology, naming, responsive design,
+navigation, and attribution issues resolved.
+
+### Website — sportmind.github.io/telegram-ai-bot-starter-kit
+
+**Navigation**
+- Added Suite nav link
+- Added hamburger menu for mobile with open/close toggle
+- GitHub button now hidden on mobile (accessible via hamburger)
+- Logo links correctly to sportmind.dev with breadcrumb display
+
+**Hero**
+- Removed badge line ("Telegram Managed Bots · MIT License · vX.X.X")
+  from hero section — version references moved to footer only
+
+**Suite section**
+- Expanded from 3 to 4 repository cards — all SportMind suite members represented
+- Added Fan Token Agentic Wallet Starter Kit with correct repository name
+- Added SportMind MCP Server card
+- Grid updated to 4-column layout (collapses to 2-column at 1024px, 1-column on mobile)
+- Section anchor updated from `#ecosystem` to `#suite`
+
+**Footer**
+- Removed "Pele Roberts" from copyright line — now reads © 2026 SportMind
+- Footer logo updated to show correct GitHub Pages URL with version
+- SportMind link confirmed pointing to sportmind.dev
+- All GitHub links verified correct
+
+**Responsive and viewport**
+- Added breakpoints for 1024px, 768px, 390px, and 375px
+- All grids collapsing correctly at every breakpoint
+- Minimum 44px touch targets applied to all buttons and nav elements
+- Buttons stack vertically on mobile with full-width layout
+- Hamburger/mobile menu opens and closes correctly
+- Code blocks scrolling horizontally within container
+- Footer wrapping correctly on mobile
+
+**Meta**
+- og:url and canonical updated to correct GitHub Pages URL
+- Version updated to v1.4.0 in footer
+
+### Repository — SportMind/telegram-ai-bot-starter-kit
+
+**README.md**
+- "open sports intelligence ecosystem" → "open sports intelligence suite"
+- "Where this fits in the SportMind ecosystem" → "SportMind suite"
+- `SportMind/wallet-kit` → `SportMind/fan-token-agentic-wallet-starter-kit`
+- GitHub Pages URL added to links section
+
+**LICENSE**
+- "Copyright (c) 2026 SportMind — Pele Roberts" → "Copyright (c) 2026 SportMind"
+- Name attribution is via git commit history only, not displayed in files
+
+**GOVERNANCE.md**
+- "created the SportMind ecosystem" → "created the SportMind suite"
+
+---
+
 ## v1.3.0 — 2026-04-30
 
 Website page updates: terminology corrections and data accuracy pass.

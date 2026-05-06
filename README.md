@@ -1,7 +1,7 @@
 # SportMind Telegram AI Bot Starter Kit
 
 > **A standalone starter kit for deploying SportMind-powered AI agent bots on Telegram in minutes.**  
-> Part of the [SportMind](https://github.com/SportMind/SportMind) open sports intelligence ecosystem.
+> Part of the [SportMind](https://github.com/SportMind/SportMind) open sports intelligence suite.
 
 ---
 
@@ -40,11 +40,11 @@ Reference: [Telegram Managed Bots — core.telegram.org](https://core.telegram.o
 
 ---
 
-## Where this fits in the SportMind ecosystem
+## Where this fits in the SportMind suite
 
 ```
 SportMind/SportMind               ← Core intelligence library (42 sports, 5 layers)
-SportMind/wallet-kit              ← Chiliz Chain on-chain integration
+SportMind/fan-token-agentic-wallet-starter-kit  ← Chiliz Chain on-chain integration
 SportMind/telegram-ai-bot-starter-kit  ← This repository
 ```
 
@@ -197,6 +197,7 @@ MIT — see [LICENSE](LICENSE). Free to use, fork, and deploy commercially.
 
 - [SportMind core library](https://github.com/SportMind/SportMind)
 - [SportMind website](https://sportmind.dev)
+- [Telegram AI Bot Starter Kit site](https://sportmind.github.io/telegram-ai-bot-starter-kit)
 - [Telegram Managed Bots documentation](https://core.telegram.org/bots/features#managed-bots)
 - [Telegram Bot API reference](https://core.telegram.org/bots/api)
 - [@LobsterClawBot on Telegram](https://t.me/LobsterClawBot)
