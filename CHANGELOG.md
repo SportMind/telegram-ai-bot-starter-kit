@@ -1,5 +1,22 @@
 # Changelog — SportMind Telegram AI Bot Starter Kit
 
+## v1.5.0 — 2026-05-11
+
+Suite section accuracy pass and MCP card removal.
+
+### Changed
+
+**Suite section — website**
+- Skill file count updated: 594 → 616
+- Calibration records updated: 126 → 129
+- SportMind MCP Server card removed — repository does not exist yet;
+  removed to prevent broken links and false expectations for developers
+- Suite grid reverted to 3-column layout (was 4-column)
+- Added placeholder line: "More coming — sportmind.dev/suite"
+- Version updated to v1.5.0 in footer
+
+---
+
 ## v1.4.0 — 2026-04-30
 
 Full site and repository audit. All terminology, naming, responsive design,
